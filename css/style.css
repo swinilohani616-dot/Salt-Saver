@@ -1,0 +1,215 @@
+/* =========================================================
+   SaltSaver – custom styles (Phase 1)
+   Bootstrap does most of the layout work. This file only adds:
+   1. Brand colours (as CSS variables, so they are easy to change)
+   2. Styles for elements that app.js creates (cards, states)
+   3. A few accessibility helpers
+   ========================================================= */
+
+/* ---------- 1. Brand colours ----------
+   :root variables can be reused anywhere with var(--name).
+   All text/background pairs below have a contrast ratio of at
+   least 4.5:1, the WCAG AA minimum for normal text. */
+:root {
+  --brand: #0b6e5a;        /* deep teal: main colour */
+  --brand-dark: #08523f;   /* darker teal: hover/pressed */
+  --brand-light: #e6f4f0;  /* very light teal: backgrounds */
+  --generic: #1d5fa8;      /* blue: "generic" labels */
+  --brand-tag: #7a3e9d;    /* purple: "brand" labels */
+  --saving: #146c2e;       /* green: savings text */
+  --radius: 0.75rem;
+}
+
+body {
+  /* Slightly larger line height is easier to read */
+  line-height: 1.6;
+}
+
+/* ---------- Navbar, footer and buttons ---------- */
+.bg-brand {
+  background-color: var(--brand);
+}
+
+.btn-brand {
+  background-color: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+
+.btn-brand:hover,
+.btn-brand:focus-visible,
+.btn-brand:active {
+  background-color: var(--brand-dark);
+  border-color: var(--brand-dark);
+  color: #fff;
+}
+
+.btn-outline-brand {
+  color: var(--brand);
+  border-color: var(--brand);
+}
+
+.btn-outline-brand:hover,
+.btn-outline-brand:focus-visible {
+  background-color: var(--brand);
+  color: #fff;
+}
+
+/* ---------- Hero and search box ---------- */
+.hero {
+  background: linear-gradient(180deg, var(--brand-light) 0%, #fff 100%);
+}
+
+.search-box {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- Status line above the results ---------- */
+.status-message {
+  font-weight: 600;
+  min-height: 1.6em; /* reserves space so the page doesn't jump */
+}
+
+/* ---------- 2. Comparison cards (created by app.js) ---------- */
+.comparison-card {
+  border: 1px solid #dee2e6;
+  border-top: 4px solid var(--brand);
+  border-radius: var(--radius);
+  height: 100%;
+}
+
+.comparison-card .card-title {
+  color: var(--brand-dark);
+}
+
+/* One row per product inside a card */
+.product-row {
+  border: 1px solid #e9ecef;
+  border-left-width: 4px;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.product-row.is-brand {
+  border-left-color: var(--brand-tag);
+}
+
+.product-row.is-generic {
+  border-left-color: var(--generic);
+}
+
+.badge-brand {
+  background-color: var(--brand-tag);
+}
+
+.badge-generic {
+  background-color: var(--generic);
+}
+
+/* The price per tablet/capsule/ml is the number that matters most */
+.unit-price {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+/* Savings summary box */
+.savings-box {
+  background: var(--brand-light);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+
+.savings-amount {
+  color: var(--saving);
+  font-weight: 700;
+}
+
+/* Warning shown on every card: not a recommendation to substitute */
+.substitution-warning {
+  font-size: 0.875rem;
+}
+
+/* Small grey text for source / verification details */
+.meta-line {
+  font-size: 0.8rem;
+  color: #6c757d; /* Bootstrap's secondary grey, readable on white */
+}
+
+/* ---------- Empty, no-results and error states ---------- */
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  border: 2px dashed #ced4da;
+  border-radius: var(--radius);
+  background: #fff;
+}
+
+.empty-state .empty-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* ---------- 3. Accessibility helpers ---------- */
+
+/* Skip link: hidden until focused with the keyboard */
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1000;
+  padding: 0.5rem 1rem;
+  background: #fff;
+  color: var(--brand-dark);
+  border: 2px solid var(--brand);
+  border-radius: 0.5rem;
+}
+
+/* A clear, consistent keyboard focus ring everywhere */
+:focus-visible {
+  outline: 3px solid #ffbf47;
+  outline-offset: 2px;
+}
+
+/* Respect users who ask their device for less motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Smooth scrolling for navbar links (only if motion is allowed) */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 575.98px) {
+  .display-5 {
+    font-size: 2.25rem;
+  }
+
+  /* On phones, stack the search input and button for bigger tap targets */
+  .search-box .input-group {
+    flex-direction: column;
+  }
+
+  .search-box .input-group > .form-control,
+  .search-box .input-group > .btn {
+    width: 100%;
+    border-radius: 0.5rem !important;
+  }
+
+  .search-box .input-group > .btn {
+    margin-top: 0.5rem;
+  }
+}

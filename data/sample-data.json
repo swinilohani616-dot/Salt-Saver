@@ -1,0 +1,240 @@
+{
+  "meta": {
+    "datasetName": "SaltSaver Phase 1 Demonstration Dataset",
+    "version": "1.0.0",
+    "lastUpdated": "2026-11-11",
+    "currency": "INR",
+    "isFictional": true,
+    "disclaimer": "FICTIONAL DEMONSTRATION DATA. Brand names, manufacturers and prices are invented for a student project. Active ingredient names are real, but nothing here is medically verified, official pricing, or evidence of availability or clinical equivalence. Do not use for any medical or purchasing decision.",
+    "priceNote": "packPrice is the made-up price of one pack. unitPrice is packPrice divided by packSize (price per tablet, capsule or ml)."
+  },
+  "medicines": [
+    {
+      "id": "DEMO-001",
+      "brandName": "Pyrovin 500",
+      "type": "brand",
+      "ingredients": [
+        { "name": "Paracetamol", "strength": 500, "unit": "mg" }
+      ],
+      "dosageForm": "tablet",
+      "manufacturer": "Example Pharma Ltd (fictional)",
+      "packSize": 15,
+      "packUnit": "tablet",
+      "packPrice": 30.00,
+      "unitPrice": 2.00,
+      "source": "SaltSaver demo dataset (invented for teaching)",
+      "verificationStatus": "unverified"
+    },
+    {
+      "id": "DEMO-002",
+      "brandName": "Paracetamol Tablets 500 mg (Demo Generic)",
+      "type": "generic",
+      "ingredients": [
+        { "name": "Paracetamol", "strength": 500, "unit": "mg" }
+      ],
+      "dosageForm": "tablet",
+      "manufacturer": "Sample Generics Co. (fictional)",
+      "packSize": 10,
+      "packUnit": "tablet",
+      "packPrice": 9.00,
+      "unitPrice": 0.90,
+      "source": "SaltSaver demo dataset (invented for teaching)",
+      "verificationStatus": "unverified"
+    },
+    {
+      "id": "DEMO-003",
+      "brandName": "Pyrovin 650",
+      "type": "brand",
+      "ingredients": [
+        { "name": "Paracetamol", "strength": 650, "unit": "mg" }
+      ],
+      "dosageForm": "tablet",
+      "manufacturer": "Example Pharma Ltd (fictional)",
+      "packSize": 15,
+      "packUnit": "tablet",
+      "packPrice": 33.75,
+      "unitPrice": 2.25,
+      "source": "SaltSaver demo dataset (invented for teaching)",
+      "verificationStatus": "unverified"
+    },
+    {
+      "id": "DEMO-004",
+      "brandName": "Allercet 10",
+      "type": "brand",
+      "ingredients": [
+        { "name": "Cetirizine", "strength": 10, "unit": "mg" }
+      ],
+      "dosageForm": "tablet",
+      "manufacturer": "Northwind Remedies (fictional)",
+      "packSize": 10,
+      "packUnit": "tablet",
+      "packPrice": 22.00,
+      "unitPrice": 2.20,
+      "source": "SaltSaver demo dataset (invented for teaching)",
+      "verificationStatus": "unverified"
+    },
+    {
+      "id": "DEMO-005",
+      "brandName": "Cetirizine Tablets 10 mg (Demo Generic)",
+      "type": "generic",
+      "ingredients": [
+        { "name": "Cetirizine", "strength": 10, "unit": "mg" }
+      ],
+      "dosageForm": "tablet",
+      "manufacturer": "Sample Generics Co. (fictional)",
+      "packSize": 10,
+      "packUnit": "tablet",
+      "packPrice": 6.50,
+      "unitPrice": 0.65,
+      "source": "SaltSaver demo dataset (invented for teaching)",
+      "verificationStatus": "unverified"
+    },
+    {
+      "id": "DEMO-006",
+      "brandName": "Allercet Syrup",
+      "type": "brand",
+      "ingredients": [
+        { "name": "Cetirizine", "strength": 5, "unit": "mg/5 ml" }
+      ],
+      "dosageForm": "syrup",
+      "manufacturer": "Northwind Remedies (fictional)",
+      "packSize": 60,
+      "packUnit": "ml",
+      "packPrice": 54.00,
+      "unitPrice": 0.90,
+      "source": "SaltSaver demo dataset (invented for teaching)",
+      "verificationStatus": "unverified"
+    },
+    {
+      "id": "DEMO-007",
+      "brandName": "Glyconix 500",
+      "type": "brand",
+      "ingredients": [
+        { "name": "Metformin", "strength": 500, "unit": "mg" }
+      ],
+      "dosageForm": "tablet",
+      "manufacturer": "Example Pharma Ltd (fictional)",
+      "packSize": 20,
+      "packUnit": "tablet",
+      "packPrice": 40.00,
+      "unitPrice": 2.00,
+      "source": "SaltSaver demo dataset (invented for teaching)",
+      "verificationStatus": "unverified"
+    },
+    {
+      "id": "DEMO-008",
+      "brandName": "Metformin Tablets 500 mg (Demo Generic A)",
+      "type": "generic",
+      "ingredients": [
+        { "name": "Metformin", "strength": 500, "unit": "mg" }
+      ],
+      "dosageForm": "tablet",
+      "manufacturer": "Sample Generics Co. (fictional)",
+      "packSize": 20,
+      "packUnit": "tablet",
+      "packPrice": 14.00,
+      "unitPrice": 0.70,
+      "source": "SaltSaver demo dataset (invented for teaching)",
+      "verificationStatus": "unverified"
+    },
+    {
+      "id": "DEMO-009",
+      "brandName": "Metformin Tablets 500 mg (Demo Generic B)",
+      "type": "generic",
+      "ingredients": [
+        { "name": "Metformin", "strength": 500, "unit": "mg" }
+      ],
+      "dosageForm": "tablet",
+      "manufacturer": "Placeholder Labs (fictional)",
+      "packSize": 15,
+      "packUnit": "tablet",
+      "packPrice": 12.75,
+      "unitPrice": 0.85,
+      "source": "SaltSaver demo dataset (invented for teaching)",
+      "verificationStatus": "unverified"
+    },
+    {
+      "id": "DEMO-010",
+      "brandName": "Amoxira 500",
+      "type": "brand",
+      "ingredients": [
+        { "name": "Amoxicillin", "strength": 500, "unit": "mg" }
+      ],
+      "dosageForm": "capsule",
+      "manufacturer": "Northwind Remedies (fictional)",
+      "packSize": 10,
+      "packUnit": "capsule",
+      "packPrice": 95.00,
+      "unitPrice": 9.50,
+      "source": "SaltSaver demo dataset (invented for teaching)",
+      "verificationStatus": "unverified"
+    },
+    {
+      "id": "DEMO-011",
+      "brandName": "Amoxicillin Capsules 500 mg (Demo Generic)",
+      "type": "generic",
+      "ingredients": [
+        { "name": "Amoxicillin", "strength": 500, "unit": "mg" }
+      ],
+      "dosageForm": "capsule",
+      "manufacturer": "Sample Generics Co. (fictional)",
+      "packSize": 10,
+      "packUnit": "capsule",
+      "packPrice": 38.00,
+      "unitPrice": 3.80,
+      "source": "SaltSaver demo dataset (invented for teaching)",
+      "verificationStatus": "unverified"
+    },
+    {
+      "id": "DEMO-012",
+      "brandName": "Duoflam",
+      "type": "brand",
+      "ingredients": [
+        { "name": "Ibuprofen", "strength": 400, "unit": "mg" },
+        { "name": "Paracetamol", "strength": 325, "unit": "mg" }
+      ],
+      "dosageForm": "tablet",
+      "manufacturer": "Example Pharma Ltd (fictional)",
+      "packSize": 10,
+      "packUnit": "tablet",
+      "packPrice": 28.00,
+      "unitPrice": 2.80,
+      "source": "SaltSaver demo dataset (invented for teaching)",
+      "verificationStatus": "unverified"
+    },
+    {
+      "id": "DEMO-013",
+      "brandName": "Ibuprofen + Paracetamol Tablets (Demo Generic)",
+      "type": "generic",
+      "ingredients": [
+        { "name": "Paracetamol", "strength": 325, "unit": "mg" },
+        { "name": "Ibuprofen", "strength": 400, "unit": "mg" }
+      ],
+      "dosageForm": "tablet",
+      "manufacturer": "Placeholder Labs (fictional)",
+      "packSize": 10,
+      "packUnit": "tablet",
+      "packPrice": 11.00,
+      "unitPrice": 1.10,
+      "source": "SaltSaver demo dataset (invented for teaching)",
+      "verificationStatus": "unverified"
+    },
+    {
+      "id": "DEMO-INVALID-01",
+      "brandName": "Broken Record Example",
+      "type": "generic",
+      "ingredients": [
+        { "name": "Metformin", "strength": 500, "unit": "mg" }
+      ],
+      "dosageForm": "tablet",
+      "manufacturer": "Placeholder Labs (fictional)",
+      "packSize": 0,
+      "packUnit": "tablet",
+      "packPrice": null,
+      "unitPrice": "cheap",
+      "source": "SaltSaver demo dataset (invented for teaching)",
+      "verificationStatus": "unverified",
+      "testNote": "INTENTIONALLY INVALID: packSize is 0, packPrice is missing and unitPrice is text. app.js should skip this record and show a notice instead of crashing."
+    }
+  ]
+}
