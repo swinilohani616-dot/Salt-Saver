@@ -1,0 +1,89 @@
+/* Print / Save as PDF (FR-05): only the savings sheet is printed. */
+@page {
+  margin: 14mm;
+}
+
+body > *:not(#print-sheet) {
+  display: none !important;
+}
+
+html {
+  font-size: 12pt !important;
+}
+
+body {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+#print-sheet {
+  display: block !important;
+  font-family: 'Atkinson Hyperlegible', Arial, sans-serif;
+  color: #000;
+}
+
+.print-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 2px solid #000;
+  padding-bottom: 6pt;
+  margin-bottom: 10pt;
+}
+.print-brand {
+  margin: 0;
+  font-weight: 700;
+  font-size: 11pt;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.print-header h1 {
+  margin: 0;
+  font-size: 18pt;
+}
+.print-meta {
+  margin: 0;
+  text-align: right;
+  font-size: 10pt;
+}
+.print-instruction {
+  margin: 0 0 10pt;
+}
+.print-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10.5pt;
+}
+.print-table th,
+.print-table td {
+  border: 1px solid #000;
+  padding: 5pt 6pt;
+  text-align: left;
+  vertical-align: top;
+}
+.print-table thead th {
+  background: #eee !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.print-table .num {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.print-table tfoot th,
+.print-table tfoot td {
+  font-weight: 700;
+}
+.print-table tr {
+  break-inside: avoid;
+}
+.print-total {
+  margin: 12pt 0 8pt;
+  font-size: 13pt;
+  font-weight: 700;
+}
+.print-disclaimer {
+  margin: 0 0 4pt;
+  font-size: 9.5pt;
+}

@@ -1,0 +1,11 @@
+{
+  "name": "saltsaver",
+  "version": "1.0.0",
+  "description": "Generic medicine substitute finder: same-salt Jan Aushadhi alternatives and monthly savings.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "npx --yes serve@14.2.4 -l 3000 .",
+    "test": "node tests/run-node.js"
+  }
+}

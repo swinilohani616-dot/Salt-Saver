@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SaltSaver Tests</title>
+    <style>
+      body { font: 16px/1.5 system-ui, sans-serif; max-width: 860px; margin: 2rem auto; padding: 0 1rem; color: #1c2420; }
+      h1 { margin-bottom: 0.25rem; }
+      #summary { font-weight: 700; font-size: 1.2rem; }
+      .pass { color: #0b6e4f; }
+      .fail { color: #b3261e; }
+      li { margin: 0.3rem 0; }
+      .err { display: block; font-family: ui-monospace, monospace; font-size: 0.85rem; color: #b3261e; }
+    </style>
+  </head>
+  <body>
+    <h1>SaltSaver test suite</h1>
+    <p>Unit tests for <code>js/core</code>, accuracy checks across every record in <code>data/sample-data.json</code>, and service tests.</p>
+    <p id="summary">Running…</p>
+    <ul id="list"></ul>
+    <script type="module">
+      import { createHarness } from './harness.js';
+      import { registerTests } from './core.test.js';
+
+      const sampleData = await (await fetch('../data/sample-data.json', { cache: 'no-cache' })).json();
+      const harness = createHarness();
+      registerTests(harness, sampleData);
+      const results = await harness.run();
+
+      const list = document.getElementById('list');
+      for (const r of results) {
+        const li = document.createElement('li');
+        li.className = r.passed ? 'pass' : 'fail';
+        li.textContent = `${r.passed ? '✓' : '✗'} ${r.name}`;
+        if (!r.passed) {
+          const err = document.createElement('span');
+          err.className = 'err';
+          err.textContent = r.error;
+          li.append(err);
+        }
+        list.append(li);
+      }
+      const failed = results.filter((r) => !r.passed).length;
+      const summary = document.getElementById('summary');
+      summary.textContent = `${results.length - failed} / ${results.length} passed`;
+      summary.className = failed ? 'fail' : 'pass';
+    </script>
+  </body>
+</html>
