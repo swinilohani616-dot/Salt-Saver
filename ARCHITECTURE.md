@@ -57,7 +57,8 @@ SaltSaver is a **single-page, client-only static web app**. All logic runs in th
 
 ```
 saltsaver/
-├── index.html                 # Single page: navbar, search, results, basket, print sheet
+├── index.html                 # Search page: navbar (with cart icon), search, results, print sheet
+├── cart.html                  # Prescription Basket page (same navbar and store)
 ├── css/
 │   ├── styles.css             # Theme tokens, large-type scale, high-contrast theme
 │   └── print.css              # @media print: shows only the savings sheet
@@ -84,7 +85,8 @@ saltsaver/
 │       ├── dom.js             # el(tag, attrs, children) helper (textContent only)
 │       ├── searchView.js      # Input, debounce, aria-live result count, empty state
 │       ├── medicineCard.js    # Brand vs generic comparison card + disclaimer
-│       ├── basketView.js      # Basket table, qty steppers, monthly total
+│       ├── basketView.js      # Basket page (cart.html): items, qty steppers, monthly totals
+│       ├── cartBadge.js       # Navbar cart icon + item-count badge
 │       ├── roleSelector.js    # Patient/Senior · Caregiver · Pharmacy Buyer
 │       ├── a11yControls.js    # Font size A-/A/A+, high-contrast toggle
 │       ├── printView.js       # Builds printable sheet, calls window.print()

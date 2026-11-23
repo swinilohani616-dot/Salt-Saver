@@ -13,7 +13,7 @@ Search the brand on your prescription. SaltSaver shows the **Jan Aushadhi generi
 |---|---|
 | FR-01 / BR-03 | Search by brand ("Crocin"), salt ("Paracetamol") or generic name. Results are ranked and appear as you type. |
 | FR-02 / BR-02 | Comparison cards show branded vs Jan Aushadhi price, the **Save %** badge and the WHO disclaimer. |
-| FR-03 / BR-01 | The monthly basket adds up `(brandPrice − genericPrice) × packs` for every medicine, per month and per year. |
+| FR-03 / BR-01 | The Prescription Basket page (`cart.html`, opened from the cart icon in the navbar) adds up `(brandPrice − genericPrice) × packs` for every medicine, per month and per year. |
 | FR-04 | The basket is saved in `localStorage` and restored after a reload. |
 | FR-05 | Prints a clean savings sheet; use the browser's **Save as PDF** for a PDF. |
 | PRD §4 | Roles: Patient / Senior, Caregiver, Pharmacy Buyer (compare only, no basket). |
@@ -53,7 +53,8 @@ The manual acceptance tests are in [docs/TEST_LOG.md](docs/TEST_LOG.md).
 ## Project structure
 
 ```
-index.html            single page (navbar, search, results, basket, modals, print sheet)
+index.html            search page (navbar with cart icon, search, results, modals, print sheet)
+cart.html             Prescription Basket page (same navbar and store)
 css/styles.css        theme, large type scale, high-contrast theme
 css/print.css         print-only layout
 js/app.js             start-up
@@ -61,7 +62,7 @@ js/config.js          storage keys, limits, all user-facing messages
 js/core/              pure logic: normalize, saltIndex, search, savings, validate, roles, sanitize, errors
 js/services/          storage (with memory fallback), dataService, medicineService, basketService
 js/state/store.js     app state + subscribe
-js/ui/                dom helper, searchView, medicineCard, basketView, roleSelector, a11yControls, printView, alerts
+js/ui/                dom helper, searchView, medicineCard, basketView, cartBadge, roleSelector, a11yControls, printView, alerts
 data/sample-data.json seed database (28 medicines)
 tests/                harness, test suite, Node runner, browser runner
 docs/                 diagrams, test log, screenshots

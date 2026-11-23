@@ -44,7 +44,7 @@ export function medicineCard({ medicine: m, sameSalt, canAdd, inBasketQty, onAdd
       el(
         'div',
         { class: 'd-flex flex-wrap align-items-center gap-2' },
-        el('span', { class: 'label-eyebrow' }, 'Active salt'),
+        el('span', { class: 'label-eyebrow' }, 'Active salt:'),
         el(
           'button',
           {
@@ -114,6 +114,26 @@ function addForm(m, inBasketQty, onAdd) {
     },
   });
 
+  const addLabel = el('span', {}, 'Add to basket');
+  const addIcon = icon('basket2-fill', 'me-2');
+  const addButton = el('button', { type: 'submit', class: 'btn btn-primary btn-lg add-button' }, addIcon, addLabel);
+  let addedTimer;
+
+  /** Short "Added" confirmation; width is locked so nothing around the button moves. */
+  const showAdded = () => {
+    clearTimeout(addedTimer);
+    addButton.style.minWidth = `${addButton.offsetWidth}px`;
+    addButton.classList.add('is-added');
+    addIcon.className = 'bi bi-check-lg me-2';
+    addLabel.textContent = 'Added';
+    addedTimer = setTimeout(() => {
+      addButton.classList.remove('is-added');
+      addIcon.className = 'bi bi-basket2-fill me-2';
+      addLabel.textContent = 'Add to basket';
+      addButton.style.minWidth = '';
+    }, 1600);
+  };
+
   const form = el(
     'form',
     { class: 'add-form', novalidate: true },
@@ -122,7 +142,7 @@ function addForm(m, inBasketQty, onAdd) {
       'div',
       { class: 'd-flex flex-wrap gap-2 align-items-center' },
       qtyControl,
-      el('button', { type: 'submit', class: 'btn btn-primary btn-lg' }, icon('basket2-fill', 'me-2'), 'Add to basket'),
+      addButton,
     ),
     error,
     inBasket,
@@ -135,6 +155,7 @@ function addForm(m, inBasketQty, onAdd) {
     if (result.ok) {
       showError(input, '');
       input.value = '1';
+      showAdded();
     } else {
       showError(input, result.error.message);
       input.focus();

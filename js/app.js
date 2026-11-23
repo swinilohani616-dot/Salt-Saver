@@ -1,5 +1,7 @@
 /**
- * App start-up (ARCHITECTURE.md §6.1):
+ * App start-up (ARCHITECTURE.md §6.1), shared by both pages:
+ *   index.html  (data-page="search") → search + comparison cards
+ *   cart.html   (data-page="cart")   → Prescription Basket page
  * storage check → load DB → restore basket/role/prefs → init store → mount views.
  */
 import { STORAGE_KEYS, DEFAULT_PREFS, FONT_SCALES, MESSAGES } from './config.js';
@@ -10,12 +12,14 @@ import { initBasket, resetBasketMemory } from './services/basketService.js';
 import { initStore, getState, setState } from './state/store.js';
 import { $ } from './ui/dom.js';
 import { toast, showStorageBanner, confirmDialog } from './ui/alerts.js';
-import { mountSearchView } from './ui/searchView.js';
+import { mountSearchView, restoreLastSearch } from './ui/searchView.js';
 import { mountBasketView } from './ui/basketView.js';
+import { mountCartBadge } from './ui/cartBadge.js';
 import { mountRoleSelector, openRoleSelector } from './ui/roleSelector.js';
 import { mountA11yControls } from './ui/a11yControls.js';
 import { printBasket } from './ui/printView.js';
 
+const PAGE = document.body.dataset.page === 'cart' ? 'cart' : 'search';
 const IDLE_SEARCH = Object.freeze({ query: '', status: 'idle', results: [] });
 
 function readPrefs() {
@@ -29,6 +33,12 @@ function readPrefs() {
 function readRole() {
   const role = storage.getJSON(STORAGE_KEYS.role);
   return isValidRole(role) ? role : null;
+}
+
+/** Re-reads basket, role and prefs from storage (another tab changed them, or Back restored a cached page). */
+function resyncFromStorage() {
+  if (getState().status !== 'ready') return;
+  setState({ role: readRole() ?? getState().role, prefs: readPrefs(), basket: initBasket() });
 }
 
 async function boot() {
@@ -50,8 +60,9 @@ async function boot() {
 
   mountA11yControls();
   mountRoleSelector();
-  mountSearchView();
-  mountBasketView();
+  mountCartBadge();
+  if (PAGE === 'search') mountSearchView();
+  else mountBasketView();
   bindGlobalButtons();
 
   const loaded = await loadDatabase();
@@ -63,7 +74,16 @@ async function boot() {
   }
 
   setState({ status: 'ready', basket: initBasket(() => getState().role) });
+  if (PAGE === 'search') restoreLastSearch();
   if (!getState().role) openRoleSelector();
+
+  // Keep every open page in sync: other tabs (storage event) and Back/Forward cache (pageshow).
+  window.addEventListener('storage', (event) => {
+    if ([STORAGE_KEYS.basket, STORAGE_KEYS.role, STORAGE_KEYS.prefs].includes(event.key)) resyncFromStorage();
+  });
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) resyncFromStorage();
+  });
 }
 
 function bindGlobalButtons() {
@@ -82,7 +102,8 @@ function bindGlobalButtons() {
       toast(loaded.error.message, { variant: 'danger' });
       return;
     }
-    $('#search-input').value = '';
+    const searchInput = $('#search-input');
+    if (searchInput) searchInput.value = '';
     setState({ role: null, prefs: { ...DEFAULT_PREFS }, search: IDLE_SEARCH, basket: initBasket() });
     toast(MESSAGES.RESET_DONE, { variant: 'info' });
     openRoleSelector();

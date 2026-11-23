@@ -18,7 +18,9 @@ The first run below was automated in headless Chrome 1280×900 and 390×844. Rep
 | T11 | FR-05 | Click **Print savings sheet** | The print dialog opens; the preview shows only the savings table | ✅ Pass (print media emulated) | 2026-11-19 / Chrome headless / automated |
 | T12 | PRD §16 | Click **A+**, then **High contrast** | Text grows to 125%; black/white/yellow theme | ✅ Pass | 2026-11-19 / Chrome headless / automated |
 | T13 | PRD §4 | Switch role to Pharmacy Buyer | The basket is hidden; cards show "Print this comparison" | ✅ Pass | 2026-11-19 / Chrome headless / automated |
-| T14 | Responsive | View at 390px width | No sideways scrolling; the bottom bar opens the basket | ✅ Pass | 2026-11-19 / Chrome headless / automated |
+| T14 | Responsive | View at 390px width | No sideways scrolling; the cart icon stays visible in the navbar and opens cart.html | ✅ Pass | 2026-11-22 / Chrome headless / automated |
+| T21 | Cart page | Add 2 medicines → click the cart icon | cart.html lists both with "Ask for" generic, qty and totals; badge shows 2 | ✅ Pass | 2026-11-22 / Chrome headless / automated |
+| T22 | Cart page | On cart.html change a quantity, remove an item, refresh, click "Continue searching" | Totals recalculate; badge updates; basket kept after refresh; returns to the last search | ✅ Pass | 2026-11-22 / Chrome headless / automated |
 | T15 | Reset | Click **Reset demo** → confirm | The basket and role are cleared; the role modal opens | ✅ Pass | 2026-11-19 / Chrome headless / automated |
 | T16 | Storage full | DevTools → Application → set the storage quota very low, or use a browser that blocks storage | The yellow banner appears and the basket keeps working in this tab | ☐ To do by hand | |
 | T17 | Keyboard | Use only Tab / Enter / Esc for T02–T08 | Every control is reachable, the focus ring is visible, and Esc closes dialogs | ☐ To do by hand | |
