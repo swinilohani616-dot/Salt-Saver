@@ -13,7 +13,7 @@ Every import follows the same path: **download → stage → review → approve*
 
 ## Before you start
 
-1. Finish the setup in the README: `npm install`, then put `DATABASE_URL` in `.env` and run `npm run db:setup`.
+1. Finish the setup in the [developer guide](DEVELOPER_GUIDE.md#run-locally): `npm install`, then put `DATABASE_URL` in `.env` and run `npm run db:setup`.
 2. **Ask PMBI for permission.** PMBI's copyright page says its material "may be reproduced free of charge after taking proper permission by sending a mail to us", and the source must be acknowledged. Send that email before you publish SaltSaver. The app already names the source on every Jan Aushadhi price.
 3. NPPA's copyright policy (https://www.nppa.gov.in/en/copyrightpolicy, read 24 Nov 2026) allows its material to be reproduced free of charge without specific permission, if it is reproduced accurately and the source is prominently acknowledged. The app names NPPA on every brand price. The price look-up itself is on nppaipdms.gov.in, which links no separate policy.
 
@@ -175,11 +175,11 @@ Real data is in use when all of the following hold:
 1. `npm run data:status` shows `pmbi_product_list` as `ok`, with a non-zero count of "Jan Aushadhi products (official PMBI list)".
 2. `GET /api/status` returns `"officialDataImported": true`.
 3. In the app:
-   - the footer reads "Jan Aushadhi MRP list (PMBI): imported <date>";
-   - every Jan Aushadhi price says "Jan Aushadhi MRP list (PMBI), imported <date>";
-   - your own MRP is labelled "Entered by you";
-   - brands from the demo data carry the badge "Demo data, not checked".
-4. Demo prices never reach users. The legacy generics ("Jan Aushadhi Paracetamol 500mg" and so on) are never search results or alternatives. Brand prices are never served; users enter their own MRP. The tests check this (`tests/server/api.test.js`).
+   - the footer reads "Jan Aushadhi MRP list (PMBI): updated <date>";
+   - every card ends with its source and date, such as "Source: NPPA Pharma Sahi Daam (official MRP), updated <date>";
+   - prices from official lists are tagged "Verified price", and your own MRP "Entered by you";
+   - brands from the demo data are tagged "Demo data" and "No verified price".
+4. Demo prices never reach users. The legacy generics ("Jan Aushadhi Paracetamol 500mg" and so on) are never search results or alternatives, and a brand's price is shown only when an official list or a checked pack gives it. The tests check this (`tests/server/search.test.js`, `tests/server/api.test.js`).
 
 ## Logs and history
 
