@@ -77,6 +77,6 @@ function setRole(roleId, { silent = false } = {}) {
 
 function renderRoleButton(roleId) {
   const role = ROLES[roleId];
-  renderInto($('#role-button'), icon(role ? ROLE_ICONS[role.id] : 'person', 'me-2'), el('span', {}, role ? role.label : 'Choose role'));
-  $('#role-button').setAttribute('aria-label', role ? `Current role: ${role.label}. Change role` : 'Choose your role');
+  renderInto($('#role-button'), icon(role ? ROLE_ICONS[role.id] : 'person', 'me-2'), el('span', {}, role ? role.label : 'Select role'));
+  $('#role-button').setAttribute('aria-label', role ? `Current role: ${role.label}. Change role` : 'Select your role');
 }

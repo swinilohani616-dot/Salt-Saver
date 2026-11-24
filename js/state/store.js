@@ -6,8 +6,9 @@
  *   status: 'loading' | 'ready' | 'error',
  *   role: 'patient' | 'caregiver' | 'pharmacy' | null,
  *   prefs: { fontScale, highContrast },
- *   search: { query, status: 'idle'|'short'|'results'|'notfound', results, message },
- *   basket: [{ medicineId, quantityPerMonth }],
+ *   search: { query, status: 'idle'|'short'|'loading'|'results'|'notfound'|'error', body, message },  // body: the API's answer
+ *   entered, references: prices typed from the user's own packs (services/referenceService.js),
+ *   basket: [lines, see core/validate.js],
  *   storageFallback: boolean,
  * }
  */

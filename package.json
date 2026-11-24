@@ -1,11 +1,39 @@
 {
   "name": "saltsaver",
   "version": "1.0.0",
-  "description": "Generic medicine substitute finder: same-salt Jan Aushadhi alternatives and monthly savings.",
+  "description": "Generic medicine substitute finder: Jan Aushadhi alternatives and savings, backed by a Postgres database.",
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "npx --yes serve@14.2.4 -l 3000 .",
-    "test": "node tests/run-node.js"
+    "start": "node server/start.js",
+    "dev:local": "node scripts/dev-local.js",
+    "db:migrate": "node scripts/db-migrate.js",
+    "db:reference": "node scripts/db-reference.js",
+    "db:seed": "node scripts/db-seed.js",
+    "db:setup": "npm run db:migrate && npm run db:reference && npm run db:seed",
+    "import:ja": "node scripts/import.js ja",
+    "import:nppa": "node scripts/import.js nppa",
+    "import:brands": "node scripts/import.js brands",
+    "import:brand-prices": "node scripts/import.js brand-prices",
+    "import:list": "node scripts/import.js list",
+    "import:show": "node scripts/import.js show",
+    "import:approve": "node scripts/import.js approve",
+    "import:reject": "node scripts/import.js reject",
+    "brands:template": "node scripts/brands-template.js",
+    "match:refresh": "node scripts/match-refresh.js",
+    "check:sources": "node scripts/check-sources.js",
+    "data:status": "node scripts/data-status.js",
+    "test": "node tests/run-node.js && node --test \"tests/server/*.test.js\""
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "pdfjs-dist": "^6.5.438",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.6.0"
+  },
+  "engines": {
+    "node": ">=20.12"
   }
 }

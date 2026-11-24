@@ -1,5 +1,7 @@
 # SaltSaver — User Workflow
 
+> **Note (Nov 2026):** W2 and W3 have changed. A search by brand or by salt shows the branded medicines and the matching Jan Aushadhi generics together, with savings at once where the brand has a verified price. Otherwise the user enters the MRP and pack size printed on their own pack, on the card. Savings are estimated only for verified matches, and the basket stores those lines. See [docs/DATA_ARCHITECTURE.md](docs/DATA_ARCHITECTURE.md#frontend). The other workflows are unchanged.
+
 > Companion to [ARCHITECTURE.md](ARCHITECTURE.md). This document describes **what the user sees and does**, step by step. Each step names the PRD requirement it covers and the module that handles it.
 > Diagrams use Mermaid. They render on GitHub and in VS Code with the "Markdown Preview Mermaid Support" extension.
 
@@ -48,29 +50,42 @@ flowchart TD
 
 ## 3. Screen map
 
-The app is a **single page**. "Screens" are sections and modals on that page, not separate URLs.
+The front page, `index.html`, is a landing page: a 3D capsule opens on scroll to show a search box,
+and its search hands the query to the search page (`search.html?q=…`).
+
+The app itself has **two pages** that share one navbar, one store and one localStorage basket:
+`search.html` (search) and `cart.html` (Prescription Basket). Everything else is a modal or a section on those pages.
 
 ```
+search.html — search
 ┌────────────────────────────────────────────────────────────────────┐
-│ NAVBAR  SaltSaver 💊 | Role: Patient ▾ | A- A A+ | ◐ Contrast | ⟲ Reset│
+│ NAVBAR SaltSaver | Role ▾ | A- A A+ | Contrast | Reset |  [🛒 Basket ②]│
 ├────────────────────────────────────────────────────────────────────┤
-│ [Skip to search]                                                   │
-│  🔍 Search medicine by brand or salt  [ Crocin____________ ] [Search]│
-│  Try: Crocin · Paracetamol · Metformin · Amlodipine  (example chips)│
+│  Search medicine by brand or salt  [ Crocin______________ ] [Search]│
+│  Try: Crocin · Paracetamol · Metformin · Amlodipine                 │
+├────────────────────────────────────────────────────────────────────┤
+│ RESULTS (aria-live: "2 medicines")                                  │
+│ ┌───────────────────────────────┐ ┌───────────────────────────────┐ │
+│ │ Crocin 500mg · Salt chip       │ │ Calpol 500mg · Salt chip       │ │
+│ │ Branded ₹30.00 │ Generic ₹5.50 │ │ ...                            │ │
+│ │ [Save 81%] Packs [-]1[+] [Add] │ │                                │ │
+│ └───────────────────────────────┘ └───────────────────────────────┘ │
+└────────────────────────────────────────────────────────────────────┘
+
+cart.html — Prescription Basket (full page, opened from the 🛒 icon)
+┌────────────────────────────────────────────────────────────────────┐
+│ NAVBAR (same)                                    [🛒 Basket ②] active│
+│ ← Continue searching                                               │
+│ My Prescription Basket                                             │
 ├──────────────────────────────────────┬─────────────────────────────┤
-│ RESULTS (aria-live: "2 medicines")   │ MY MONTHLY BASKET (2)       │
-│ ┌──────────────────────────────────┐ │ Crocin 500mg   [-] 2 [+] 🗑 │
-│ │ Crocin 500mg · Sample Pharma     │ │ Glycomet 500   [-] 1 [+] 🗑 │
-│ │ Salt: [Paracetamol 500mg]        │ │ ─────────────────────────── │
-│ │ Branded ₹30.00 │ Generic ₹5.50   │ │ Branded total     ₹ 96.00  │
-│ │        [ Save 81% ]              │ │ Generic total     ₹ 20.00  │
-│ │ Packs/month [-] 1 [+] [Add ➕]   │ │ YOU SAVE / MONTH  ₹ 76.00  │
-│ │ ⓘ Generics contain identical     │ │                   (79%)    │
-│ │   WHO-approved active salts.     │ │ [🖨 Print savings sheet]    │
-│ └──────────────────────────────────┘ │ [Clear basket]              │
+│ Crocin 500mg            [Remove]     │ MONTHLY SUMMARY (2)         │
+│ Ask for: Jan Aushadhi Paracetamol    │ Branded total     ₹ 85.00   │
+│ Packs/month [-] 2 [+]                │ Generic total     ₹ 17.00   │
+│ Branded ₹60 · Generic ₹11 · Save ₹49 │ YOU SAVE / MONTH  ₹ 68.00   │
+│ Glycomet 500 ...                     │ [Print] [Continue searching]│
+│ ⓘ WHO-approved salts disclaimer      │ [Clear basket]              │
 └──────────────────────────────────────┴─────────────────────────────┘
-  Mobile (< 768px): the basket becomes a sticky bottom bar
-  "Basket (2) · Save ₹76/mo ▸" that opens an offcanvas panel.
+  Mobile: the 🛒 icon stays visible next to the menu button; the summary stacks below the list.
 ```
 
 | Screen / component | Module | When it shows |
@@ -79,7 +94,8 @@ The app is a **single page**. "Screens" are sections and modals on that page, no
 | Search bar + example chips | `ui/searchView.js` | Always |
 | Result cards | `ui/medicineCard.js` | After a search that finds results |
 | Empty / error states | `ui/searchView.js`, `ui/alerts.js` | No match, data load failed |
-| Basket panel | `ui/basketView.js` | Patient / Caregiver only |
+| Cart icon + badge | `ui/cartBadge.js` | Both pages; hidden for Pharmacy Buyer |
+| Prescription Basket page | `cart.html` + `ui/basketView.js` | Opened from the cart icon; Patient / Caregiver only |
 | Print sheet | `ui/printView.js` + `print.css` | Only while printing |
 | Storage banner | `ui/alerts.js` | localStorage is full or unavailable |
 
@@ -134,7 +150,7 @@ sequenceDiagram
     participant C as Medicine card
     participant BS as basketService
     participant S as storage
-    participant BV as Basket panel
+    participant BV as Cart badge / basket page
     U->>C: Set packs/month = 2, click "Add"
     C->>BS: addToBasket("med_101", 2)
     BS->>BS: validateQuantity · can(role,"addToBasket")
@@ -206,8 +222,8 @@ sequenceDiagram
 
 | From → To | Effect |
 |---|---|
-| Patient → Pharmacy Buyer | The basket panel and "Add" buttons are **hidden**, but the basket data is **kept**, not deleted. "Print this comparison" appears on cards. |
-| Pharmacy Buyer → Caregiver | The basket panel reappears with the previously saved items. |
+| Patient → Pharmacy Buyer | The cart icon and "Add" buttons are **hidden** (cart.html shows a notice), but the basket data is **kept**, not deleted. "Print this comparison" appears on cards. |
+| Pharmacy Buyer → Caregiver | The cart icon reappears and cart.html shows the previously saved items. |
 | Any → Any | The search results stay on screen. Toast: "Role changed to Caregiver." |
 
 ---
@@ -255,13 +271,16 @@ Keep all of these in `js/config.js` as `MESSAGES`, so the wording is consistent 
 | `NOT_FOUND` | No brand found. Try searching by active salt name. | Search empty state |
 | `QTY_MIN` | Quantity must be at least 1. | Alert (W3) |
 | `QTY_MAX` | Quantity can be at most 999. | Alert (W3) |
-| `DISCLAIMER` | Generics contain identical WHO-approved active chemical salts. | Every card + print sheet |
-| `PRICE_NOTE` | Prices are indicative. Consult your doctor before switching medicines. | Print sheet, footer *(pending mentor review)* |
-| `ADDED` | {brand} added to your basket. | Toast |
-| `EMPTY_BASKET` | Your basket is empty. Search a medicine and tap *Add to basket*. | Basket panel |
-| `STORAGE_FULL` | Storage is full — your basket will be kept until you close this tab. | Banner |
-| `DATA_LOAD_FAIL` | Could not load medicine data. Please refresh. | Alert |
-| `RESET_CONFIRM` | Reset demo? This clears your basket, role and settings. | Modal |
+| `DISCLAIMER` | Generics contain identical WHO-approved active chemical salts. | Every card with the same salt, basket, print sheet, footer |
+| `SAFETY_NOTE` | Possible alternative only. Confirm with your doctor or pharmacist before switching medicines. | Every card, basket, print sheet |
+| `PRICE_NOTE` | Monthly savings are estimates: the price of your branded medicine minus the price of the same amount of the generic, for the packs you use each month. Please confirm the price at your Jan Aushadhi Kendra. | Basket, print sheet |
+| `added` | {medicine} added to your comparison basket. | Toast |
+| `CONSULT` | Consult your doctor or pharmacist before switching medicines. | Above search results |
+| `BASKET_PURPOSE` | This basket is for comparing prices and talking to your doctor or pharmacist. It does not order medicines or switch them for you. | Basket page |
+| `EMPTY_BASKET` | Your prescription basket is empty. Search a medicine and tap "Add to Comparison Basket" to see your monthly savings. | Basket page |
+| `STORAGE_FULL` | Storage is full or blocked. Your prescription basket is kept only until you close this tab. Print it to keep a copy. | Banner |
+| `DATA_LOAD_FAIL` | Could not load medicine data. Please refresh the page. | Alert |
+| Reset dialog (`app.js`) | Reset SaltSaver demo? This clears your prescription basket, the prices you entered, your role and your display settings on this device. | Modal |
 
 ---
 

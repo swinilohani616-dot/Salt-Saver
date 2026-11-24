@@ -8,9 +8,11 @@ const { Toast, Modal } = window.bootstrap;
 
 /**
  * @param {string} message
- * @param {{variant?:'success'|'danger'|'info', action?:{label:string, onClick:() => void}, delay?:number}} [options]
+ * @param {{variant?:'success'|'danger'|'info', action?:{label:string, onClick:() => void}, delay?:number, group?:string}} [options]
+ *        group: a newer message replaces the one before it, instead of piling up over the page
  */
-export function toast(message, { variant = 'success', action, delay = 5000 } = {}) {
+export function toast(message, { variant = 'success', action, delay = 5000, group } = {}) {
+  if (group) document.querySelectorAll(`#toast-stack [data-group="${group}"]`).forEach((old) => old.remove());
   const icons = { success: 'check-circle-fill', danger: 'exclamation-triangle-fill', info: 'info-circle-fill' };
   const body = el(
     'div',
@@ -34,7 +36,7 @@ export function toast(message, { variant = 'success', action, delay = 5000 } = {
   );
   const node = el(
     'div',
-    { class: 'toast', role: variant === 'danger' ? 'alert' : 'status', aria: { live: variant === 'danger' ? 'assertive' : 'polite', atomic: 'true' } },
+    { class: 'toast', dataset: group ? { group } : {}, role: variant === 'danger' ? 'alert' : 'status', aria: { live: variant === 'danger' ? 'assertive' : 'polite', atomic: 'true' } },
     body,
   );
   $('#toast-stack').append(node);

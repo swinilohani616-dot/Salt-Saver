@@ -1,5 +1,7 @@
 # SaltSaver — Diagrams
 
+> **Note (Nov 2026):** these diagrams show the original static version. The current data flow is shown in [DATA_ARCHITECTURE.md](DATA_ARCHITECTURE.md#overview).
+
 > Mermaid sources for every diagram. They render on GitHub; in VS Code install "Markdown Preview Mermaid Support". See [ARCHITECTURE.md](../ARCHITECTURE.md) and [USER_WORKFLOW.md](../USER_WORKFLOW.md).
 
 ## System architecture

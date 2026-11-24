@@ -1,22 +1,29 @@
 /**
- * App start-up (ARCHITECTURE.md §6.1):
- * storage check → load DB → restore basket/role/prefs → init store → mount views.
+ * App start-up (ARCHITECTURE.md §6.1), shared by both pages:
+ *   search.html (data-page="search") → search + comparison cards (index.html is the landing page, js/landing.js)
+ *   cart.html   (data-page="cart")   → Prescription Basket page
+ * storage check → load data status → restore basket/role/prefs → init store → mount views.
+ * Searches (with their comparisons) and prices are loaded from the API as needed.
  */
 import { STORAGE_KEYS, DEFAULT_PREFS, FONT_SCALES, MESSAGES } from './config.js';
 import { isValidRole } from './core/roles.js';
 import * as storage from './services/storage.js';
-import { loadDatabase, resetDemo } from './services/dataService.js';
+import { loadDataStatus, resetApp } from './services/dataService.js';
 import { initBasket, resetBasketMemory } from './services/basketService.js';
+import { clearReferences } from './services/referenceService.js';
 import { initStore, getState, setState } from './state/store.js';
 import { $ } from './ui/dom.js';
 import { toast, showStorageBanner, confirmDialog } from './ui/alerts.js';
-import { mountSearchView } from './ui/searchView.js';
+import { mountSearchView, restoreLastSearch } from './ui/searchView.js';
 import { mountBasketView } from './ui/basketView.js';
+import { mountCartBadge } from './ui/cartBadge.js';
 import { mountRoleSelector, openRoleSelector } from './ui/roleSelector.js';
 import { mountA11yControls } from './ui/a11yControls.js';
 import { printBasket } from './ui/printView.js';
+import { renderDataBanner } from './ui/dataBanner.js';
 
-const IDLE_SEARCH = Object.freeze({ query: '', status: 'idle', results: [] });
+const PAGE = document.body.dataset.page === 'cart' ? 'cart' : 'search';
+const IDLE_SEARCH = Object.freeze({ query: '', status: 'idle', body: null });
 
 function readPrefs() {
   const saved = storage.getJSON(STORAGE_KEYS.prefs, {}) || {};
@@ -29,6 +36,12 @@ function readPrefs() {
 function readRole() {
   const role = storage.getJSON(STORAGE_KEYS.role);
   return isValidRole(role) ? role : null;
+}
+
+/** Re-reads basket, role and prefs from storage (another tab changed them, or Back restored a cached page). */
+function resyncFromStorage() {
+  if (getState().status !== 'ready') return;
+  setState({ role: readRole() ?? getState().role, prefs: readPrefs(), basket: initBasket() });
 }
 
 async function boot() {
@@ -50,40 +63,53 @@ async function boot() {
 
   mountA11yControls();
   mountRoleSelector();
-  mountSearchView();
-  mountBasketView();
+  mountCartBadge();
+  if (PAGE === 'search') mountSearchView();
+  else mountBasketView();
   bindGlobalButtons();
 
-  const loaded = await loadDatabase();
+  // The data status says which official lists are imported and whether they are stale.
+  // If the server cannot be reached the page still opens (the basket is saved on this device);
+  // the banner explains, and searches show a friendly error.
+  await loadDataStatus();
   $('#loading-state').hidden = true;
-  if (!loaded.ok) {
-    $('#load-error').hidden = false;
-    setState({ status: 'error' });
-    return;
-  }
+  renderDataBanner();
 
   setState({ status: 'ready', basket: initBasket(() => getState().role) });
+  if (PAGE === 'search') restoreLastSearch();
   if (!getState().role) openRoleSelector();
+
+  // Keep every open page in sync: other tabs (storage event) and Back/Forward cache (pageshow).
+  window.addEventListener('storage', (event) => {
+    if ([STORAGE_KEYS.basket, STORAGE_KEYS.role, STORAGE_KEYS.prefs].includes(event.key)) resyncFromStorage();
+  });
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) resyncFromStorage();
+  });
 }
 
 function bindGlobalButtons() {
   $('#reset-button').addEventListener('click', async () => {
     const yes = await confirmDialog({
-      title: 'Reset demo?',
-      body: 'This clears your basket, role and display settings and reloads the sample medicines.',
-      confirmLabel: 'Reset demo',
+      title: 'Reset SaltSaver demo?',
+      body: 'This clears your prescription basket, the prices you entered, your role and your display settings on this device.',
+      confirmLabel: 'Reset',
       danger: true,
     });
     if (!yes) return;
 
     resetBasketMemory();
-    const loaded = await resetDemo();
-    if (!loaded.ok) {
-      toast(loaded.error.message, { variant: 'danger' });
-      return;
+    clearReferences();
+    try {
+      sessionStorage.clear();
+    } catch {
+      /* blocked */
     }
-    $('#search-input').value = '';
-    setState({ role: null, prefs: { ...DEFAULT_PREFS }, search: IDLE_SEARCH, basket: initBasket() });
+    await resetApp();
+    renderDataBanner();
+    const searchInput = $('#search-input');
+    if (searchInput) searchInput.value = '';
+    setState({ role: null, prefs: { ...DEFAULT_PREFS }, search: IDLE_SEARCH, references: {}, entered: {}, basket: initBasket() });
     toast(MESSAGES.RESET_DONE, { variant: 'info' });
     openRoleSelector();
   });
