@@ -24,12 +24,12 @@ function render(state) {
   const count = state.basket.length;
   badge.textContent = count > 0 ? String(count) : '';
   // Bump whenever something is added, including more packs of a medicine already in the basket.
-  const packs = state.basket.reduce((sum, item) => sum + item.quantityPerMonth, 0);
+  const packs = state.basket.reduce((sum, item) => sum + item.packsPerMonth, 0);
   if (lastPacks !== null && packs > lastPacks && count > 0) bump(badge);
   if (state.status === 'ready') lastPacks = packs;
   link.setAttribute(
     'aria-label',
-    count > 0 ? `Open Prescription Basket, ${count} ${count === 1 ? 'medicine' : 'medicines'}` : 'Open Prescription Basket, empty',
+    count > 0 ? `Open My Prescription Savings Basket, ${count} ${count === 1 ? 'medicine' : 'medicines'}` : 'Open My Prescription Savings Basket, empty',
   );
 }
 

@@ -3,9 +3,9 @@
  */
 
 export const ROLES = Object.freeze({
-  patient: { id: 'patient', label: 'Patient / Senior', description: 'Find cheaper generics for my own medicines.' },
-  caregiver: { id: 'caregiver', label: 'Caregiver', description: "Manage a family member's monthly medicines." },
-  pharmacy: { id: 'pharmacy', label: 'Pharmacy Buyer', description: 'Compare brand and generic prices at the counter.' },
+  patient: { id: 'patient', label: 'Patient / Senior', description: 'Find same-salt generics and save on my monthly medicines.' },
+  caregiver: { id: 'caregiver', label: 'Caregiver', description: "Find generics and plan a family member's monthly medicines." },
+  pharmacy: { id: 'pharmacy', label: 'Pharmacy Buyer', description: 'Compare branded and generic prices at the pharmacy counter.' },
 });
 
 export const DEFAULT_ROLE = 'patient';

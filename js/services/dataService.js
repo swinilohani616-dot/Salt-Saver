@@ -1,61 +1,38 @@
 /**
- * Loads the medicine database: localStorage first, sample-data.json as fallback.
+ * Data status: which official lists are imported, when, and whether they are stale.
+ * Loaded once at start-up from /api/status; search and prices come from catalogService.
  */
-import { DATA_URL, STORAGE_KEYS, SCHEMA_VERSION, MESSAGES } from '../config.js';
-import { ERR, ok, fail } from '../core/errors.js';
-import { validateDb } from '../core/validate.js';
-import { buildSaltIndex } from '../core/saltIndex.js';
+import { ok, fail, ERR } from '../core/errors.js';
+import { apiGet } from './api.js';
 import * as storage from './storage.js';
 
-/** @type {{medicines:object[], byId:Map<string,object>, saltIndex:Map<string,object[]>}|null} */
-let db = null;
-
-async function fetchSeed() {
-  const response = await fetch(DATA_URL, { cache: 'no-cache' });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  return response.json();
-}
-
-function buildDb(medicines) {
-  return {
-    medicines,
-    byId: new Map(medicines.map((m) => [m.id, m])),
-    saltIndex: buildSaltIndex(medicines),
-  };
-}
+/** @type {{sources:object[], counts:object, officialDataImported:boolean}|null} */
+let status = null;
 
 /**
- * @param {{loadSeed?: () => Promise<unknown>}} [options] loadSeed is injectable for tests
+ * @param {{loadStatus?: () => Promise<object>}} [options] loadStatus is injectable for tests
+ * @returns {Promise<{ok:true,data:object}|{ok:false,error:object}>}
  */
-export async function loadDatabase({ loadSeed = fetchSeed } = {}) {
-  const cached = validateDb(storage.getJSON(STORAGE_KEYS.db));
-  if (cached.ok) {
-    db = buildDb(cached.data.medicines);
-    return ok(db);
-  }
-
-  let seed;
+export async function loadDataStatus({ loadStatus = () => apiGet('status') } = {}) {
   try {
-    seed = await loadSeed();
+    const body = await loadStatus();
+    if (!body || !Array.isArray(body.sources) || !body.counts) throw new Error('unexpected status format');
+    status = body;
+    return ok(status);
   } catch (error) {
-    console.error('SaltSaver: failed to load medicine data', error);
-    return fail(ERR.DATA_LOAD, MESSAGES.DATA_LOAD_FAIL);
+    console.error('SaltSaver: could not load data status', error);
+    status = null;
+    return fail(ERR.DATA_LOAD, error.message);
   }
-
-  const result = validateDb(seed);
-  if (!result.ok) return result;
-  if (result.data.skipped > 0) console.warn(`SaltSaver: skipped ${result.data.skipped} invalid medicine records`);
-
-  storage.setJSON(STORAGE_KEYS.db, { schemaVersion: SCHEMA_VERSION, medicines: result.data.medicines });
-  db = buildDb(result.data.medicines);
-  return ok(db);
 }
 
-export const getDb = () => db;
+export const getDataStatus = () => status;
 
-/** Clears every SaltSaver key and re-seeds from sample-data.json. */
-export async function resetDemo(options) {
+/** One source's status by id ('pmbi_product_list', 'nppa_ceiling_prices', ...). */
+export const sourceInfo = (id) => status?.sources.find((s) => s.id === id) ?? null;
+
+/** Clears every SaltSaver key on this device and reloads the data status. */
+export async function resetApp(options) {
   storage.clearAll();
-  db = null;
-  return loadDatabase(options);
+  return loadDataStatus(options);
 }

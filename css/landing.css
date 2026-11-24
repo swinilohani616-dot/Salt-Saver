@@ -1,0 +1,88 @@
+/*
+ * Front page (index.html): the capsule landing.
+ * VOICE: calm, clinical, premium — a pharmacy at night
+ * IDEA: the capsule is the guide; opening it shows what's inside (the salt)
+ * PICTURE: one glossy two-tone WebGL capsule that travels side to side
+ * COLOUR and TYPE: graphite ground, coral cap, bone body; IBM Plex Sans throughout. It has a real
+ *   rupee sign and clearly different I / l / 1, which matters in drug names and doses
+ * LAYOUT: fixed 3D stage; the capsule flips side to side opposite the copy, then opens
+ *   behind the closing line in the sticky finale
+ */
+:root{color-scheme:dark;--font:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;--halo:0 0 34px rgba(12,15,19,.9),0 2px 12px rgba(12,15,19,.75);--bg:#0c0f13;--ink:#eef0f2;--mute:#a6aeb8;--line:#2b323c;--card:#151a21;--coral:#ff5b4a;--bone:#f3efe8}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:16px/1.55 var(--font);overflow-x:clip;-webkit-font-smoothing:antialiased}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#stage{position:fixed;inset:0;z-index:0;pointer-events:none}
+#stage canvas{display:block;width:100%!important;height:100%!important}
+.glow{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(60% 50% at 50% 55%,#18202a 0%,var(--bg) 70%)}
+nav{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px max(5vw,16px) 28px;background:linear-gradient(var(--bg) 45%,rgba(12,15,19,0))}
+.mark{font:700 19px/1 var(--font);letter-spacing:-.01em;color:var(--ink);text-decoration:none;display:flex;gap:10px;align-items:center;min-height:44px}
+.mark i{width:24px;height:11px;border-radius:6px;background:linear-gradient(90deg,var(--coral) 50%,var(--bone) 50%)}
+.navlinks{display:flex;gap:8px}
+.navbtn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:22px;border:1px solid var(--line);background:rgba(21,26,33,.7);backdrop-filter:blur(10px);color:var(--ink);text-decoration:none;font-weight:500;font-size:15px}
+.navbtn:hover{border-color:#4a5360}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
+main{position:relative;z-index:1}
+/* Big headlines; the dark halo keeps them readable where they cross the capsule. */
+h1,h2,.msg{font-weight:600;letter-spacing:-.03em;line-height:1.04;text-wrap:balance;margin:0;text-shadow:var(--halo)}
+.lede{color:#c9ced5;text-shadow:var(--halo);line-height:1.5}
+.hero{height:100vh;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:0 max(5vw,16px) 8vh}
+.hero h1{font-size:clamp(48px,7vw,112px);max-width:12ch}
+.hero p{font-size:clamp(18px,1.45vw,22px);max-width:40ch;margin:18px 0 0}
+.cue{color:var(--mute);font-size:14px;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.cue span{width:1px;height:40px;background:linear-gradient(var(--mute),transparent)}
+.scene{height:140vh;display:flex;align-items:center;padding:0 max(5vw,16px)}
+.scene.r{justify-content:flex-end}
+.panel{width:min(620px,46vw)}
+.panel h2{font-size:clamp(36px,4.3vw,72px)}
+.panel p{font-size:clamp(17px,1.4vw,21px);margin:18px 0 0;max-width:40ch}
+.chips,.rows,.facts,.note{max-width:460px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{font-size:14px;padding:6px 12px;border-radius:16px;border:1px solid var(--line);color:var(--ink);background:var(--card);text-decoration:none}
+a.chip:hover{border-color:#4a5360}
+.rows{margin-top:24px;border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden}
+.row{display:flex;justify-content:space-between;gap:12px;padding:13px 16px;border-top:1px solid var(--line);font-size:15px}
+.row:first-child{border-top:0}
+.row b{font-weight:600}.row span{color:var(--mute);text-align:right}
+.row .ok{color:#7fd8b5}.row .no{color:#ffa79d}
+.note{font-size:13px;color:var(--mute);margin-top:10px}
+.facts{margin:22px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.facts li{padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:15px}
+.facts li b{display:block;font-size:13px;color:var(--mute);font-weight:500;margin-bottom:2px}
+.finale{height:300vh;position:relative}
+.sticky{position:sticky;top:0;height:100vh;display:grid;place-items:center;padding:0 16px}
+.center{display:grid;justify-items:center;gap:28px;width:min(980px,100%);text-align:center}
+.center .search{max-width:480px}
+.msg{font-size:clamp(46px,6.2vw,100px);max-width:12ch;opacity:0;will-change:transform,opacity,filter}
+.search{width:100%;opacity:0;position:relative}
+.search form{display:flex;gap:8px;padding:6px;border-radius:30px;background:rgba(21,26,33,.88);border:1px solid var(--line);backdrop-filter:blur(12px)}
+.search input{flex:1;font:16px var(--font);color:var(--ink);background:transparent;border:0;padding:0 16px;min-height:46px;outline:none}
+.search input::placeholder{color:#7f8893}
+.search button[type=submit]{min-height:46px;padding:0 22px;border-radius:24px;border:0;background:var(--coral);color:#1a0a07;font:600 15px var(--font);cursor:pointer}
+.try{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:12px;font-size:14px;color:var(--mute);align-items:center;text-shadow:var(--halo)}
+.try button{background:rgba(21,26,33,.92);border:1px solid var(--line);color:var(--ink);border-radius:16px;padding:0 12px;min-height:34px;font:14px var(--font);cursor:pointer}
+.try button:hover{border-color:#4a5360}
+.results{position:absolute;left:0;right:0;top:64px;margin:0;padding:6px;list-style:none;border-radius:18px;background:#141920;border:1px solid var(--line);max-height:42vh;overflow:auto;text-align:left;z-index:3;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.results[hidden]{display:none}
+.results li+li{border-top:1px solid var(--line)}
+.results a{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;color:var(--ink);text-decoration:none}
+.results a:hover,.results a:focus-visible{background:#1c232c}
+.results b{font-weight:600}
+.results small,.results .info{color:var(--mute);font-size:13px}
+.results .info{display:block;padding:12px 14px}
+.results em{font-style:normal;font-size:13px;color:var(--coral);white-space:nowrap}
+.results .all{color:var(--mute);font-size:14px}
+.disc{position:absolute;bottom:20px;left:0;right:0;text-align:center;font-size:13px;color:var(--mute);padding:0 16px;margin:0;opacity:0}
+.anchor{position:absolute;bottom:0;height:1px;width:1px}
+.no3d .msg,.no3d .search,.no3d .disc{opacity:1}
+@media(max-width:760px){
+ .hero{flex-direction:column;align-items:flex-start;justify-content:flex-end}
+ .cue{display:none}
+ .scene,.scene.r{align-items:flex-end;justify-content:stretch;padding-bottom:10vh}
+ /* No room beside the copy on phones: the copy sits on a near-solid card, so the capsule never shows through the words. */
+ .panel{width:100%;padding:22px;border-radius:18px;background:rgba(12,15,19,.96);backdrop-filter:blur(10px);border:1px solid var(--line)}
+ .navbtn span{display:none}
+ .search button[type=submit]{padding:0 16px}
+ .disc{bottom:12px}.disc span{background:rgba(12,15,19,.85);padding:4px 8px;border-radius:8px}
+}

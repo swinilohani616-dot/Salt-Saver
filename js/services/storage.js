@@ -3,7 +3,7 @@
  * If a write fails (quota exceeded, private mode, blocked site data) the app
  * switches to session memory for the rest of the tab and notifies listeners once.
  * Session memory is sessionStorage when available (so the basket survives moving
- * between index.html and cart.html), plus an in-memory Map as the last resort.
+ * between search.html and cart.html), plus an in-memory Map as the last resort.
  */
 import { STORAGE_PREFIX } from '../config.js';
 

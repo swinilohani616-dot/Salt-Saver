@@ -1,0 +1,38 @@
+# Scheduled data check (free: GitHub Actions minutes).
+#   - twice a week: data freshness, waiting reviews, and new file versions (if a direct URL is set)
+#   - every day 1-7 April: NPPA's annual ceiling price revision (effective 1 April)
+# It never changes catalogue data: new files are only staged for your review.
+# The run fails (and GitHub emails you) when something needs attention.
+# The weekly database query also keeps a free Supabase project from pausing.
+#
+# Setup: repository Settings > Secrets and variables > Actions
+#   Secret   DATABASE_URL  Supabase "Session pooler" connection string
+#   Variable PMBI_LIST_URL / NPPA_LIST_URL  (optional) a direct link to the official file, if one exists
+name: Data check
+
+on:
+  schedule:
+    - cron: '30 3 * * 1,4' # Monday and Thursday, 09:00 IST
+    - cron: '30 3 1-7 4 *' # 1-7 April, 09:00 IST (NPPA annual revision)
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Check data sources
+        run: npm run check:sources -- --fail-on-attention
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PMBI_LIST_URL: ${{ vars.PMBI_LIST_URL }}
+          NPPA_LIST_URL: ${{ vars.NPPA_LIST_URL }}

@@ -1,5 +1,7 @@
 # SaltSaver — Architecture
 
+> **Note (Nov 2026):** this document describes the original static version, which used a bundled demo dataset and client-side search. SaltSaver now uses a Postgres database, official Indian data imports and a matching engine; see [docs/DATA_ARCHITECTURE.md](docs/DATA_ARCHITECTURE.md). The UI structure, roles, accessibility, storage fallback and printing described here still apply.
+
 > Generic Medicine Substitute Finder · PST_PD_096 · PRD v1.0
 > Stack: HTML5, CSS3, Vanilla JavaScript (ES modules), Bootstrap 5 · No backend · Deployed as a static site (GitHub Pages / Vercel)
 
@@ -15,7 +17,7 @@ SaltSaver is a **single-page, client-only static web app**. All logic runs in th
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
-│                           index.html (Bootstrap 5)                    │
+│                          search.html (Bootstrap 5)                    │
 │  Navbar(Role selector · A+/A- · Contrast · Reset)  Search  Results  Basket │
 └───────────────▲──────────────────────────────────────────┬───────────┘
                 │ render(state)                            │ DOM events
@@ -57,7 +59,9 @@ SaltSaver is a **single-page, client-only static web app**. All logic runs in th
 
 ```
 saltsaver/
-├── index.html                 # Search page: navbar (with cart icon), search, results, print sheet
+├── index.html                 # Front page: scroll-driven 3D capsule (js/landing.js, css/landing.css);
+│                              #   search suggestions from /api/suggest, then search.html?q=…
+├── search.html                # Search page: navbar (with cart icon), search, results, print sheet
 ├── cart.html                  # Prescription Basket page (same navbar and store)
 ├── css/
 │   ├── styles.css             # Theme tokens, large-type scale, high-contrast theme

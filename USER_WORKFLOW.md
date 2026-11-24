@@ -1,5 +1,7 @@
 # SaltSaver — User Workflow
 
+> **Note (Nov 2026):** W2 and W3 have changed. A search by brand or by salt shows the branded medicines and the matching Jan Aushadhi generics together, with savings at once where the brand has a verified price. Otherwise the user enters the MRP and pack size printed on their own pack, on the card. Savings are estimated only for verified matches, and the basket stores those lines. See [docs/DATA_ARCHITECTURE.md](docs/DATA_ARCHITECTURE.md#frontend). The other workflows are unchanged.
+
 > Companion to [ARCHITECTURE.md](ARCHITECTURE.md). This document describes **what the user sees and does**, step by step. Each step names the PRD requirement it covers and the module that handles it.
 > Diagrams use Mermaid. They render on GitHub and in VS Code with the "Markdown Preview Mermaid Support" extension.
 
@@ -48,11 +50,14 @@ flowchart TD
 
 ## 3. Screen map
 
-The app has **two pages** that share one navbar, one store and one localStorage basket:
-`index.html` (search) and `cart.html` (Prescription Basket). Everything else is a modal or a section on those pages.
+The front page, `index.html`, is a landing page: a 3D capsule opens on scroll to show a search box,
+and its search hands the query to the search page (`search.html?q=…`).
+
+The app itself has **two pages** that share one navbar, one store and one localStorage basket:
+`search.html` (search) and `cart.html` (Prescription Basket). Everything else is a modal or a section on those pages.
 
 ```
-index.html — search
+search.html — search
 ┌────────────────────────────────────────────────────────────────────┐
 │ NAVBAR SaltSaver | Role ▾ | A- A A+ | Contrast | Reset |  [🛒 Basket ②]│
 ├────────────────────────────────────────────────────────────────────┤
@@ -266,13 +271,16 @@ Keep all of these in `js/config.js` as `MESSAGES`, so the wording is consistent 
 | `NOT_FOUND` | No brand found. Try searching by active salt name. | Search empty state |
 | `QTY_MIN` | Quantity must be at least 1. | Alert (W3) |
 | `QTY_MAX` | Quantity can be at most 999. | Alert (W3) |
-| `DISCLAIMER` | Generics contain identical WHO-approved active chemical salts. | Every card + print sheet |
-| `PRICE_NOTE` | Prices are indicative. Consult your doctor before switching medicines. | Print sheet, footer *(pending mentor review)* |
-| `ADDED` | {brand} added to your basket. | Toast |
-| `EMPTY_BASKET` | Your basket is empty. Search a medicine and tap *Add to basket*. | Basket page |
-| `STORAGE_FULL` | Storage is full — your basket will be kept until you close this tab. | Banner |
-| `DATA_LOAD_FAIL` | Could not load medicine data. Please refresh. | Alert |
-| `RESET_CONFIRM` | Reset demo? This clears your basket, role and settings. | Modal |
+| `DISCLAIMER` | Generics contain identical WHO-approved active chemical salts. | Every card with the same salt, basket, print sheet, footer |
+| `SAFETY_NOTE` | Possible alternative only. Confirm with your doctor or pharmacist before switching medicines. | Every card, basket, print sheet |
+| `PRICE_NOTE` | Monthly savings are estimates: the price of your branded medicine minus the price of the same amount of the generic, for the packs you use each month. Please confirm the price at your Jan Aushadhi Kendra. | Basket, print sheet |
+| `added` | {medicine} added to your comparison basket. | Toast |
+| `CONSULT` | Consult your doctor or pharmacist before switching medicines. | Above search results |
+| `BASKET_PURPOSE` | This basket is for comparing prices and talking to your doctor or pharmacist. It does not order medicines or switch them for you. | Basket page |
+| `EMPTY_BASKET` | Your prescription basket is empty. Search a medicine and tap "Add to Comparison Basket" to see your monthly savings. | Basket page |
+| `STORAGE_FULL` | Storage is full or blocked. Your prescription basket is kept only until you close this tab. Print it to keep a copy. | Banner |
+| `DATA_LOAD_FAIL` | Could not load medicine data. Please refresh the page. | Alert |
+| Reset dialog (`app.js`) | Reset SaltSaver demo? This clears your prescription basket, the prices you entered, your role and your display settings on this device. | Modal |
 
 ---
 
